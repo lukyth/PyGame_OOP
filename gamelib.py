@@ -3,10 +3,13 @@ from pygame.locals import *
 
 class SimpleGame(object):
 
+    Resolution_X = 1280
+    Resolution_Y = 896
+
     def __init__(self,
                  title,
                  background_color,
-                 window_size=(640,480),
+                 window_size=(Resolution_X, Resolution_Y),
                  fps=60):
         self.title = title
         self.window_size = window_size
