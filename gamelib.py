@@ -4,7 +4,7 @@ from pygame.locals import *
 class SimpleGame(object):
 
     Resolution_X = 1280
-    Resolution_Y = 896
+    Resolution_Y = 832
 
     def __init__(self,
                  title,
