@@ -4,10 +4,10 @@ from gamelib import SimpleGame
 from random import randint
 #########################################
 class Player(object):
-    player_white=pygame.image.load("Player_black.png")
-    player_black=pygame.image.load("Player_white.png")
-    player_white2=pygame.image.load("Player_black2.png")
-    player_black2=pygame.image.load("Player_white2.png")
+    player_white=pygame.image.load("img/Player_black.png")
+    player_black=pygame.image.load("img/Player_white.png")
+    player_white2=pygame.image.load("img/Player_black2.png")
+    player_black2=pygame.image.load("img/Player_white2.png")
     which_player = 1
     init_delay = 1
     init_decay_time = 0.1
@@ -22,7 +22,7 @@ class Player(object):
         self.died_delay = Player.init_died_delay
         self.game_end = 0
         self.BG_delay = 0
-        self.player_picture = pygame.image.load("Player_white.png")
+        self.player_picture = pygame.image.load("img/Player_white.png")
         self.this_player = Player.which_player
         Player.which_player += 1
 
@@ -113,10 +113,10 @@ class Bomb(object):
     def check_blast_color(self,color):
         if(color is 0):
             self.blast_color = pygame.Color('black')
-            Bomb.bomb_image = pygame.image.load("bBomb.png")
+            Bomb.bomb_image = pygame.image.load("img/bBomb.png")
         elif(color is 1):
             self.blast_color = pygame.Color('white')
-            Bomb.bomb_image = pygame.image.load("Bomb.png")
+            Bomb.bomb_image = pygame.image.load("img/Bomb.png")
 
 
     def plant_bomb(self, x, y):
@@ -163,8 +163,8 @@ class Bomb(object):
 
 #########################################
 class Wall(object):
-    Wall_image = pygame.image.load("Wall.png")
-    bWall_image = pygame.image.load("bWall.png")
+    Wall_image = pygame.image.load("img/Wall.png")
+    bWall_image = pygame.image.load("img/bWall.png")
     init_wall_random_time = 20
     init_decay_random_time = 0.1
     init_wall_move_x = 75
