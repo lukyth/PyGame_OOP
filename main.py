@@ -1,6 +1,8 @@
 import pygame
 from pygame.locals import *
 from random import randint
+from board.practicum import findDevices
+from board.peri import PeriBoard
 
 import gamelib
 from element import Player, Bomb, Wall
@@ -22,9 +24,10 @@ class MainGame(gamelib.SimpleGame):
 
         self.player = []
         for i in range(0,self.player_number,1):
-            self.player.append(Player(radius=30,
-                         color=MainGame.WHITE,
-                         pos=self.player_default_pos))
+            board = None
+            if i < len(findDevices()):
+                board = PeriBoard(findDevices()[i])
+            self.player.append(Player(board,radius=30,color=MainGame.WHITE,pos=self.player_default_pos))
             self.player_default_pos = (532+152,382+152)
 
         self.bomb = []
