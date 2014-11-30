@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 from gamelib import SimpleGame
-
+from random import randint
 #########################################
 class Player(object):
     player_white=pygame.image.load("Player_black.png")
@@ -12,6 +12,7 @@ class Player(object):
     init_delay = 1
     init_decay_time = 0.1
     init_died_delay = 20
+    init_BG_delay = 15
     def __init__(self, radius, color, pos):
         (self.x, self.y) = pos
         self.radius = radius
@@ -164,9 +165,15 @@ class Bomb(object):
 class Wall(object):
     Wall_image = pygame.image.load("Wall.png")
     bWall_image = pygame.image.load("bWall.png")
+    init_wall_random_time = 20
+    init_decay_random_time = 0.1
+    init_wall_move_x = 75
+    init_wall_move_y = 75
     def __init__(self, pos, color):
+        (self.init_x, self.init_y) = pos
         (self.x, self.y) = pos
         self.color = color
+        self.random_time = Wall.init_wall_random_time
         if(color is 0):
             self.image = Wall.Wall_image
         elif(color is 1):
@@ -185,7 +192,32 @@ class Wall(object):
         return self.y
 
     def wall_random_position(self):
+        self.random_time -= Wall.init_decay_random_time
+        if(self.random_time < 0):
+            self.random_time = Wall.init_wall_random_time
+            random = randint(0, 1)
+            randxy = randint(0, 1)
+            if(random is 0):
+                if(randxy is 0):
+                    self.x += Wall.init_wall_move_x
+                elif(randxy is 1):
+                    self.x -= Wall.init_wall_move_x
+            elif(random is 1):
+                if(randxy is 0):
+                    self.y += Wall.init_wall_move_y
+                elif(randxy is 1):
+                    self.y -= Wall.init_wall_move_y
+
         pass
 
     def check_wall_offscreen(self):
+        if(self.x > SimpleGame.Resolution_X ):
+            self.x = self.init_x
+        if(self.y > SimpleGame.Resolution_Y ):
+            self.y = self.init_y
+        if(self.x < 0):
+            self.x = self.init_x
+        if(self.y < 0):
+            self.y = self.init_y
+
         pass

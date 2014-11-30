@@ -60,7 +60,7 @@ class MainGame(gamelib.SimpleGame):
                     wall_x = 0
                     wall_y += 152
 
-        print "Who died more than 10 times LOSE!!"
+        print "Who died more than 5 times LOSE!!"
 
     def pbomb(self):
         print self.bomb[0].send_blast_status()
@@ -87,22 +87,22 @@ class MainGame(gamelib.SimpleGame):
                 if(MainGame.BG_for_player is 0):
                     MainGame.BG = MainGame.BLACK
                     MainGame.BG_for_player = 1
-                    self.player[0].BG_delay = 30
+                    self.player[0].BG_delay = self.player[0].init_BG_delay
                 elif(MainGame.BG_for_player is 1):
                     MainGame.BG =  MainGame.WHITE
                     MainGame.BG_for_player = 0
-                    self.player[0].BG_delay = 30
+                    self.player[0].BG_delay = self.player[0].init_BG_delay
 
         if(self.player[1].BG_delay < 0):#BG_CHANGE_FOR_OOP P2
             if self.is_key_pressed(K_RSHIFT):
                 if(MainGame.BG_for_player is 0):
                     MainGame.BG = MainGame.BLACK
                     MainGame.BG_for_player = 1
-                    self.player[1].BG_delay = 30
+                    self.player[1].BG_delay = self.player[0].init_BG_delay
                 elif(MainGame.BG_for_player is 1):
                     MainGame.BG =  MainGame.WHITE
                     MainGame.BG_for_player = 0
-                    self.player[1].BG_delay = 30
+                    self.player[1].BG_delay = self.player[0].init_BG_delay
 
         # if self.is_key_pressed(K_q): #BG_CHANGE_FOR_PRACTICUM
         #     MainGame.BG = MainGame.BLACK
@@ -217,6 +217,12 @@ class MainGame(gamelib.SimpleGame):
             self.bomb2[k].bomb_blast()
             for i in range(0,self.player_number,1):
                 self.bomb2[k].check_player(self.player[i]) #P2
+
+        for i in range(0,20,2):
+            for j in range(0,14,2):
+                self.world_map[i][j].wall_random_position()
+                self.world_map[i][j].check_wall_offscreen()
+
 
 
     def render(self, surface):
