@@ -71,7 +71,7 @@ class Player(object):
             self.x = 7
 
     def check_endgame(self):
-        if(self.times_died >= 10):
+        if(self.times_died >= 5):
             print " Player",self.this_player," LOSE"
             self.game_end = 1
 
@@ -106,7 +106,7 @@ class Bomb(object):
         self.time = Bomb.init_time
         self.isPlant = False
         self.isBomb = False
-        self.blastTime = init_blastTime
+        self.blastTime = Bomb.init_blastTime
 
 
     def check_blast_color(self,color):
