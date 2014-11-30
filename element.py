@@ -9,14 +9,16 @@ class Player(object):
     player_white2=pygame.image.load("Player_black2.png")
     player_black2=pygame.image.load("Player_white2.png")
     which_player = 1
-
+    init_delay = 1
+    init_decay_time = 0.1
+    init_died_delay = 20
     def __init__(self, radius, color, pos):
         (self.x, self.y) = pos
         self.radius = radius
         self.color = color
-        self.delay = 1
+        self.delay = Player.init_delay
         self.times_died = 0
-        self.died_delay = 20
+        self.died_delay = Player.init_died_delay
         self.game_end = 0
         self.BG_delay = 0
         self.player_picture = pygame.image.load("Player_white.png")
@@ -24,8 +26,8 @@ class Player(object):
         Player.which_player += 1
 
     def player_delay(self):
-        self.delay -= (0.1)
-        self.BG_delay -= 0.1
+        self.delay -= Player.init_decay_time
+        self.BG_delay -= Player.init_decay_time
 
     def player_check_color(self,BG):
         if(BG is 0 and self.this_player is 1):
@@ -40,22 +42,22 @@ class Player(object):
 
     def move_up(self):
             self.y = self.y-75
-            self.delay = 1
+            self.delay = Player.init_delay
             #print self.x,self.y
 
     def move_down(self):
             self.y = self.y+75
-            self.delay = 1
+            self.delay = Player.init_delay
             # print self.x,self.y
 
     def move_left(self):
             self.x = self.x-75
-            self.delay = 1
+            self.delay = Player.init_delay
             # print self.x,self.y
 
     def move_right(self):
             self.x = self.x+75
-            self.delay = 1
+            self.delay = Player.init_delay
             # print self.x,self.y
 
     def check_offscreen(self):
@@ -88,6 +90,9 @@ class Player(object):
 #########################################
 class Bomb(object):
     bomb_image = []
+    init_time = 10
+    init_blastTime = 3
+    init_decay_time = 0.1
     def __init__(self):
 
         self.blast_range = 214
@@ -98,10 +103,10 @@ class Bomb(object):
         self.bomb_position = (SimpleGame.Resolution_X+1000,SimpleGame.Resolution_Y+1000)
         (self.x,self.y) = self.bomb_position
 
-        self.time = 10
+        self.time = Bomb.init_time
         self.isPlant = False
         self.isBomb = False
-        self.blastTime = 3
+        self.blastTime = init_blastTime
 
 
     def check_blast_color(self,color):
@@ -120,27 +125,27 @@ class Bomb(object):
 
     def bomb_blast(self):
         if(self.isBomb):
-            self.blastTime -= 0.1
+            self.blastTime -= Bomb.init_decay_time
         if(self.blastTime < 0):
             self.isBomb = False
             self.isPlant = False
-            self.blastTime = 3
+            self.blastTime = init_blastTime
     def check_player(self,player):
-        player.died_delay -= 0.1
+        player.died_delay -= Bomb.init_decay_time
         if self.isBomb and ((( self.bomb_position[0]-self.blast_position<= player.x+64 <= self.bomb_position[0]-self.blast_position + self.blast_range) and ( self.bomb_position[1]-16 <= player.y+64 <= self.bomb_position[1]-16 + self.blast_range) )
             or
             (( self.bomb_position[0]-16 <= player.x+64 <= self.bomb_position[0]-16 + self.blast_range ) and ( self.bomb_position[1]-self.blast_position <= player.y+64 <= self.bomb_position[1]-self.blast_position + self.blast_range))):
             if(player.died_delay <= 0):
-                player.died_delay = 20
+                player.died_delay = init_died_delay
                 player.times_died += 1
                 print " Player",player.this_player," DIED", player.times_died," times"
 
 
     def bomb_decay(self):
         if(self.isPlant):
-            self.time -= (0.1)
+            self.time -= (Bomb.init_decay_time)
         if(self.time < 0):
-            self.time = 8
+            self.time = Bomb.init_time
             self.isBomb = True
 
     def render(self, surface):
