@@ -129,14 +129,14 @@ class Bomb(object):
         if(self.blastTime < 0):
             self.isBomb = False
             self.isPlant = False
-            self.blastTime = init_blastTime
+            self.blastTime = Bomb.init_blastTime
     def check_player(self,player):
         player.died_delay -= Bomb.init_decay_time
         if self.isBomb and ((( self.bomb_position[0]-self.blast_position<= player.x+64 <= self.bomb_position[0]-self.blast_position + self.blast_range) and ( self.bomb_position[1]-16 <= player.y+64 <= self.bomb_position[1]-16 + self.blast_range) )
             or
             (( self.bomb_position[0]-16 <= player.x+64 <= self.bomb_position[0]-16 + self.blast_range ) and ( self.bomb_position[1]-self.blast_position <= player.y+64 <= self.bomb_position[1]-self.blast_position + self.blast_range))):
             if(player.died_delay <= 0):
-                player.died_delay = init_died_delay
+                player.died_delay = player.init_died_delay
                 player.times_died += 1
                 print " Player",player.this_player," DIED", player.times_died," times"
 
@@ -184,3 +184,8 @@ class Wall(object):
     def get_y(self):
         return self.y
 
+    def wall_random_position(self):
+        pass
+
+    def check_wall_offscreen(self):
+        pass
