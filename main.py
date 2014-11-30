@@ -9,18 +9,16 @@ class MainGame(gamelib.SimpleGame):
     BLACK = pygame.Color('black')
     WHITE = pygame.Color('white')
     GREEN = pygame.Color('green')
+    BG = pygame.Color('black')
+    BG_for_player = 1
     bomb_number = 3
     player_number = 2
     blast_color_check = 0
     player_default_pos = (532,382)
     def __init__(self):
-        color_random = randint(0,1)
-        if(color_random is 0):
-            MainGame.blast_color_check = 0
-            super(MainGame, self).__init__('MainGame', MainGame.WHITE)
-        elif(color_random is 1):
-            MainGame.blast_color_check = 1
-            super(MainGame, self).__init__('MainGame', MainGame.BLACK)
+
+        super(MainGame, self).__init__('MainGame', MainGame.BLACK)
+
 
         self.player = []
         for i in range(0,self.player_number,1):
@@ -62,6 +60,8 @@ class MainGame(gamelib.SimpleGame):
                     wall_x = 0
                     wall_y += 152
 
+        print "Who died more than 10 times LOSE!!"
+
     def pbomb(self):
         print self.bomb[0].send_blast_status()
         print self.bomb[1].send_blast_status()
@@ -75,12 +75,46 @@ class MainGame(gamelib.SimpleGame):
         super(MainGame, self).init()
 
     def update(self):
-        if self.is_key_pressed(K_ESCAPE):
+
+
+        self.get_BG_color(self.BG)
+        if self.is_key_pressed(K_ESCAPE) or self.player[0].game_end is 1 or self.player[1].game_end is 1:
             print "terminate by user...."
             self.terminate()
 
+        if(self.player[0].BG_delay < 0):#BG_CHANGE_FOR_OOP P1
+            if self.is_key_pressed(K_q):
+                if(MainGame.BG_for_player is 0):
+                    MainGame.BG = MainGame.BLACK
+                    MainGame.BG_for_player = 1
+                    self.player[0].BG_delay = 30
+                elif(MainGame.BG_for_player is 1):
+                    MainGame.BG =  MainGame.WHITE
+                    MainGame.BG_for_player = 0
+                    self.player[0].BG_delay = 30
+
+        if(self.player[1].BG_delay < 0):#BG_CHANGE_FOR_OOP P2
+            if self.is_key_pressed(K_RSHIFT):
+                if(MainGame.BG_for_player is 0):
+                    MainGame.BG = MainGame.BLACK
+                    MainGame.BG_for_player = 1
+                    self.player[1].BG_delay = 30
+                elif(MainGame.BG_for_player is 1):
+                    MainGame.BG =  MainGame.WHITE
+                    MainGame.BG_for_player = 0
+                    self.player[1].BG_delay = 30
+
+        # if self.is_key_pressed(K_q): #BG_CHANGE_FOR_PRACTICUM
+        #     MainGame.BG = MainGame.BLACK
+        #     MainGame.BG_for_player = 1
+        # else:
+        #     MainGame.BG =  MainGame.WHITE
+        #     MainGame.BG_for_player = 0
+
         self.player[0].check_offscreen()
-        self.player[0].player_move_delay()
+        self.player[0].player_delay()
+        self.player[0].check_endgame()
+        self.player[0].player_check_color(MainGame.BG_for_player)
 
         if self.player[0].delay <= 0:
             if self.is_key_pressed(K_w):
@@ -117,11 +151,12 @@ class MainGame(gamelib.SimpleGame):
                             collide = True
                 if not collide:
                     self.player[0].move_right() #movement
-
-                self.player[0].check_offscreen()
+                self.player[0].check_offscreen() #P1
 
         self.player[1].check_offscreen()
-        self.player[1].player_move_delay()
+        self.player[1].player_delay()
+        self.player[1].check_endgame()
+        self.player[1].player_check_color(MainGame.BG_for_player)
 
         if self.player[1].delay <= 0:
             if self.is_key_pressed(K_UP):
@@ -157,7 +192,7 @@ class MainGame(gamelib.SimpleGame):
                         if ( self.world_map[i][j].collision(self.player[1].x,self.player[1].y,+75,0) ):
                             collide = True
                 if not collide:
-                    self.player[1].move_right() #movement
+                    self.player[1].move_right() #movement #P2
 
         for k in range(0,self.bomb_number,1): #bombloop
 
@@ -169,19 +204,19 @@ class MainGame(gamelib.SimpleGame):
             self.bomb[k].bomb_decay()
             self.bomb[k].bomb_blast()
             for i in range(0,self.player_number,1):
-                self.bomb[k].check_player(self.player[i])
+                self.bomb[k].check_player(self.player[i]) #P1
 
         for k in range(0,self.bomb_number,1): #bombloop
 
-            self.bomb[k].check_blast_color(MainGame.blast_color_check)
+            self.bomb2[k].check_blast_color(MainGame.blast_color_check)
 
-            if (self.is_key_pressed(K_RCTRL) and not self.bomb[k].isPlant ) :
-                self.bomb[k].plant_bomb(self.player[1].get_x(), self.player[1].get_y())
+            if (self.is_key_pressed(K_RCTRL) and not self.bomb2[k].isPlant ) :
+                self.bomb2[k].plant_bomb(self.player[1].get_x(), self.player[1].get_y())
 
-            self.bomb[k].bomb_decay()
-            self.bomb[k].bomb_blast()
+            self.bomb2[k].bomb_decay()
+            self.bomb2[k].bomb_blast()
             for i in range(0,self.player_number,1):
-                self.bomb[k].check_player(self.player[i])
+                self.bomb2[k].check_player(self.player[i]) #P2
 
 
     def render(self, surface):
@@ -189,6 +224,8 @@ class MainGame(gamelib.SimpleGame):
             self.player[i].render(surface)
         for x in range(0,self.bomb_number,1):
             self.bomb[x].render(surface)
+        for x in range(0,self.bomb_number,1):
+            self.bomb2[x].render(surface)
         for i in range(0,20,2):
             for j in range(0,14,2):
                 self.world_map[i][j].render(surface)

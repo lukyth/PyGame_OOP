@@ -4,8 +4,10 @@ from gamelib import SimpleGame
 
 #########################################
 class Player(object):
-    player_white=pygame.image.load("Player_.png")
-    player_black=pygame.image.load("Player_black.png")
+    player_white=pygame.image.load("Player_black.png")
+    player_black=pygame.image.load("Player_white.png")
+    player_white2=pygame.image.load("Player_black2.png")
+    player_black2=pygame.image.load("Player_white2.png")
     which_player = 1
 
     def __init__(self, radius, color, pos):
@@ -13,11 +15,27 @@ class Player(object):
         self.radius = radius
         self.color = color
         self.delay = 1
+        self.times_died = 0
+        self.died_delay = 20
+        self.game_end = 0
+        self.BG_delay = 0
+        self.player_picture = pygame.image.load("Player_white.png")
         self.this_player = Player.which_player
         Player.which_player += 1
 
-    def player_move_delay(self):
+    def player_delay(self):
         self.delay -= (0.1)
+        self.BG_delay -= 0.1
+
+    def player_check_color(self,BG):
+        if(BG is 0 and self.this_player is 1):
+            self.player_picture = Player.player_white
+        elif(BG is 1 and self.this_player is 1):
+            self.player_picture = Player.player_black
+        if(BG is 0 and self.this_player is 2):
+            self.player_picture = Player.player_white2
+        elif(BG is 1 and self.this_player is 2):
+            self.player_picture = Player.player_black2
 
 
     def move_up(self):
@@ -50,6 +68,12 @@ class Player(object):
         if(self.x >= SimpleGame.Resolution_X):
             self.x = 7
 
+    def check_endgame(self):
+        if(self.times_died >= 10):
+            print " Player",self.this_player," LOSE"
+            self.game_end = 1
+
+
     def get_x(self):
         return self.x
     def get_y(self):
@@ -58,7 +82,7 @@ class Player(object):
 
     def render(self, surface):
         pos = (int(self.x),int(self.y))
-        surface.blit(self.player_white, pos)
+        surface.blit(self.player_picture, pos)
 
 
 #########################################
@@ -74,7 +98,7 @@ class Bomb(object):
         self.bomb_position = (SimpleGame.Resolution_X+1000,SimpleGame.Resolution_Y+1000)
         (self.x,self.y) = self.bomb_position
 
-        self.time = 8
+        self.time = 10
         self.isPlant = False
         self.isBomb = False
         self.blastTime = 3
@@ -101,13 +125,15 @@ class Bomb(object):
             self.isBomb = False
             self.isPlant = False
             self.blastTime = 3
-    i = 0
     def check_player(self,player):
+        player.died_delay -= 0.1
         if self.isBomb and ((( self.bomb_position[0]-self.blast_position<= player.x+64 <= self.bomb_position[0]-self.blast_position + self.blast_range) and ( self.bomb_position[1]-16 <= player.y+64 <= self.bomb_position[1]-16 + self.blast_range) )
             or
             (( self.bomb_position[0]-16 <= player.x+64 <= self.bomb_position[0]-16 + self.blast_range ) and ( self.bomb_position[1]-self.blast_position <= player.y+64 <= self.bomb_position[1]-self.blast_position + self.blast_range))):
-            Bomb.i += 1
-            print " Player",player.this_player," DIED", Bomb.i," times"
+            if(player.died_delay <= 0):
+                player.died_delay = 20
+                player.times_died += 1
+                print " Player",player.this_player," DIED", player.times_died," times"
 
 
     def bomb_decay(self):
