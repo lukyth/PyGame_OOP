@@ -86,7 +86,8 @@ class MainGame(gamelib.SimpleGame):
             self.terminate()
 
         if(self.player[0].BG_delay < 0):#BG_CHANGE_FOR_OOP P1
-            if self.is_key_pressed(K_q):
+            p1Light = self.player[0].board.getLight() if self.player[0].board is not None else 200
+            if self.is_key_pressed(K_q) or p1Light < 100:
                 if(MainGame.BG_for_player is 0):
                     MainGame.BG = MainGame.BLACK
                     MainGame.BG_for_player = 1
@@ -97,7 +98,8 @@ class MainGame(gamelib.SimpleGame):
                     self.player[0].BG_delay = self.player[0].init_BG_delay
 
         if(self.player[1].BG_delay < 0):#BG_CHANGE_FOR_OOP P2
-            if self.is_key_pressed(K_RSHIFT):
+            p2Light = self.player[1].board.getLight() if self.player[1].board is not None else 200
+            if self.is_key_pressed(K_RSHIFT)  or p2Light < 100:
                 if(MainGame.BG_for_player is 0):
                     MainGame.BG = MainGame.BLACK
                     MainGame.BG_for_player = 1
@@ -120,7 +122,8 @@ class MainGame(gamelib.SimpleGame):
         self.player[0].player_check_color(MainGame.BG_for_player)
 
         if self.player[0].delay <= 0:
-            if self.is_key_pressed(K_w):
+            board = self.player[0].board
+            if self.is_key_pressed(K_w) or board.getSwitchUp() if board is not None else False:
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -129,7 +132,7 @@ class MainGame(gamelib.SimpleGame):
                 if not collide:
                     self.player[0].move_up()
 
-            elif self.is_key_pressed(K_s):
+            elif self.is_key_pressed(K_s) or board.getSwitchDown() if board is not None else False:
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -138,7 +141,7 @@ class MainGame(gamelib.SimpleGame):
                 if not collide:
                     self.player[0].move_down()
 
-            elif self.is_key_pressed(K_a):
+            elif self.is_key_pressed(K_a) or board.getSwitchLeft() if board is not None else False:
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -146,7 +149,7 @@ class MainGame(gamelib.SimpleGame):
                             collide = True
                 if not collide:
                     self.player[0].move_left()
-            elif self.is_key_pressed(K_d):
+            elif self.is_key_pressed(K_d) or board.getSwitchRight() if board is not None else False:
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -162,7 +165,8 @@ class MainGame(gamelib.SimpleGame):
         self.player[1].player_check_color(MainGame.BG_for_player)
 
         if self.player[1].delay <= 0:
-            if self.is_key_pressed(K_UP):
+            board = self.player[1].board
+            if self.is_key_pressed(K_UP) or board.getSwitchUp() if board is not None else False:
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -171,7 +175,7 @@ class MainGame(gamelib.SimpleGame):
                 if not collide:
                     self.player[1].move_up()
 
-            elif self.is_key_pressed(K_DOWN):
+            elif self.is_key_pressed(K_DOWN) or board.getSwitchDown() if board is not None else False:
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -180,7 +184,7 @@ class MainGame(gamelib.SimpleGame):
                 if not collide:
                     self.player[1].move_down()
 
-            elif self.is_key_pressed(K_LEFT):
+            elif self.is_key_pressed(K_LEFT) or board.getSwitchLeft() if board is not None else False:
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -188,7 +192,7 @@ class MainGame(gamelib.SimpleGame):
                             collide = True
                 if not collide:
                     self.player[1].move_left()
-            elif self.is_key_pressed(K_RIGHT):
+            elif self.is_key_pressed(K_RIGHT) or board.getSwitchRight() if board is not None else False:
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -201,7 +205,7 @@ class MainGame(gamelib.SimpleGame):
 
             self.bomb[k].check_blast_color(MainGame.blast_color_check)
 
-            if (self.is_key_pressed(K_SPACE) and not self.bomb[k].isPlant ) :
+            if (self.is_key_pressed(K_SPACE) or self.player[0].board.getSwitchBomb() if self.player[0].board is not None else False and not self.bomb[k].isPlant ) :
                 self.bomb[k].plant_bomb(self.player[0].get_x(), self.player[0].get_y())
 
             self.bomb[k].bomb_decay()
@@ -213,7 +217,7 @@ class MainGame(gamelib.SimpleGame):
 
             self.bomb2[k].check_blast_color(MainGame.blast_color_check)
 
-            if (self.is_key_pressed(K_RCTRL) and not self.bomb2[k].isPlant ) :
+            if (self.is_key_pressed(K_RCTRL) or self.player[1].board.getSwitchBomb() if self.player[1].board is not None else False and not self.bomb2[k].isPlant ) :
                 self.bomb2[k].plant_bomb(self.player[1].get_x(), self.player[1].get_y())
 
             self.bomb2[k].bomb_decay()
