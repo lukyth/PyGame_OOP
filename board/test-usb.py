@@ -15,7 +15,7 @@ print "*** Device name: %s" % b.getDeviceName()
 
 count = 0
 while True:
-    sleep(1)
+    # sleep(1)
     swu = b.getSwitchUp()
     swd = b.getSwitchDown()
     swl = b.getSwitchLeft()

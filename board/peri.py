@@ -70,4 +70,4 @@ class PeriBoard(McuBoard):
         '''
         Return the current reading of light sensor on peripheral board
         '''
-        return self.usbRead(request = RQ_GET_LIGHT, length = 1)[0] + (self.usbRead(request = RQ_GET_LIGHT, length = 2)[1] * 256)
+        return self.usbRead(request = RQ_GET_LIGHT, length = 2)[0] + (self.usbRead(request = RQ_GET_LIGHT, length = 2)[1] * 256)
