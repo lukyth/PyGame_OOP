@@ -174,7 +174,8 @@ class Wall(object):
         (self.init_x, self.init_y) = pos
         (self.x, self.y) = pos
         self.color = color
-        self.random_time = Wall.init_wall_random_time
+        # self.random_time = Wall.init_wall_random_time
+        self.random_time = 1
         if(color is 0):
             self.image = Wall.Wall_image
         elif(color is 1):

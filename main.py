@@ -17,6 +17,8 @@ class MainGame(gamelib.SimpleGame):
     player_number = 2
     blast_color_check = 0
     player_default_pos = (532,382)
+    is_random = False
+
     def __init__(self):
 
         super(MainGame, self).__init__('MainGame', MainGame.BLACK)
@@ -237,10 +239,12 @@ class MainGame(gamelib.SimpleGame):
             for i in range(0,self.player_number,1):
                 self.bomb2[k].check_player(self.player[i]) #P2
 
-        for i in range(0,20,2):
-            for j in range(0,14,2):
-                self.world_map[i][j].wall_random_position()
-                self.world_map[i][j].check_wall_offscreen()
+        if self.is_key_pressed(K_r) and self.is_key_pressed(K_t) and self.is_key_pressed(K_y) or MainGame.is_random:
+            MainGame.is_random = True
+            for i in range(0,20,2):
+                for j in range(0,14,2):
+                    self.world_map[i][j].wall_random_position()
+                    self.world_map[i][j].check_wall_offscreen()
 
 
 
