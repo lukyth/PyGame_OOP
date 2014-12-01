@@ -71,23 +71,38 @@ class MainGame(gamelib.SimpleGame):
         print self.bomb[2].send_blast_status()
 
 
+    def get_switch(self, switch, player):
+        board = self.player[player].board
+        if board is not None:
+            if switch is 'up':
+                return board.getSwitchUp()
+            elif switch is 'down':
+                return board.getSwitchDown()
+            elif switch is 'left':
+                return board.getSwitchLeft()
+            elif switch is 'right':
+                return board.getSwitchRight()
+            elif switch is 'bomb':
+                return board.getSwitchBomb()
+        return False
 
-
+    def get_light(self, player):
+        board = self.player[player].board
+        if board is not None:
+            return board.getLight()
+        return 500
 
     def init(self):
         super(MainGame, self).init()
 
     def update(self):
-
-
         self.get_BG_color(self.BG)
         if self.is_key_pressed(K_ESCAPE) or self.player[0].game_end is 1 or self.player[1].game_end is 1:
             print "terminate by user...."
             self.terminate()
 
         if(self.player[0].BG_delay < 0):#BG_CHANGE_FOR_OOP P1
-            p1Light = self.player[0].board.getLight() if self.player[0].board is not None else 200
-            if self.is_key_pressed(K_q) or p1Light < 100:
+            if self.is_key_pressed(K_q) or self.get_light(0) < 150:
                 if(MainGame.BG_for_player is 0):
                     MainGame.BG = MainGame.BLACK
                     MainGame.BG_for_player = 1
@@ -98,8 +113,7 @@ class MainGame(gamelib.SimpleGame):
                     self.player[0].BG_delay = self.player[0].init_BG_delay
 
         if(self.player[1].BG_delay < 0):#BG_CHANGE_FOR_OOP P2
-            p2Light = self.player[1].board.getLight() if self.player[1].board is not None else 200
-            if self.is_key_pressed(K_RSHIFT)  or p2Light < 100:
+            if self.is_key_pressed(K_RSHIFT)  or self.get_light(1) < 150:
                 if(MainGame.BG_for_player is 0):
                     MainGame.BG = MainGame.BLACK
                     MainGame.BG_for_player = 1
@@ -122,8 +136,7 @@ class MainGame(gamelib.SimpleGame):
         self.player[0].player_check_color(MainGame.BG_for_player)
 
         if self.player[0].delay <= 0:
-            board = self.player[0].board
-            if self.is_key_pressed(K_w) or board.getSwitchUp() if board is not None else False:
+            if self.is_key_pressed(K_w) or self.get_switch('up', 0):
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -132,7 +145,7 @@ class MainGame(gamelib.SimpleGame):
                 if not collide:
                     self.player[0].move_up()
 
-            elif self.is_key_pressed(K_s) or board.getSwitchDown() if board is not None else False:
+            elif self.is_key_pressed(K_s) or self.get_switch('down', 0):
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -141,7 +154,7 @@ class MainGame(gamelib.SimpleGame):
                 if not collide:
                     self.player[0].move_down()
 
-            elif self.is_key_pressed(K_a) or board.getSwitchLeft() if board is not None else False:
+            elif self.is_key_pressed(K_a) or self.get_switch('left', 0):
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -149,7 +162,7 @@ class MainGame(gamelib.SimpleGame):
                             collide = True
                 if not collide:
                     self.player[0].move_left()
-            elif self.is_key_pressed(K_d) or board.getSwitchRight() if board is not None else False:
+            elif self.is_key_pressed(K_d) or self.get_switch('right', 0):
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -165,8 +178,7 @@ class MainGame(gamelib.SimpleGame):
         self.player[1].player_check_color(MainGame.BG_for_player)
 
         if self.player[1].delay <= 0:
-            board = self.player[1].board
-            if self.is_key_pressed(K_UP) or board.getSwitchUp() if board is not None else False:
+            if self.is_key_pressed(K_UP) or self.get_switch('up', 1):
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -175,7 +187,7 @@ class MainGame(gamelib.SimpleGame):
                 if not collide:
                     self.player[1].move_up()
 
-            elif self.is_key_pressed(K_DOWN) or board.getSwitchDown() if board is not None else False:
+            elif self.is_key_pressed(K_DOWN) or self.get_switch('down', 1):
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -184,7 +196,7 @@ class MainGame(gamelib.SimpleGame):
                 if not collide:
                     self.player[1].move_down()
 
-            elif self.is_key_pressed(K_LEFT) or board.getSwitchLeft() if board is not None else False:
+            elif self.is_key_pressed(K_LEFT) or self.get_switch('left', 1):
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -192,7 +204,7 @@ class MainGame(gamelib.SimpleGame):
                             collide = True
                 if not collide:
                     self.player[1].move_left()
-            elif self.is_key_pressed(K_RIGHT) or board.getSwitchRight() if board is not None else False:
+            elif self.is_key_pressed(K_RIGHT) or self.get_switch('right', 1):
                 collide = False
                 for i in range(0,20,2):
                     for j in range(0,14,2):
@@ -205,7 +217,7 @@ class MainGame(gamelib.SimpleGame):
 
             self.bomb[k].check_blast_color(MainGame.blast_color_check)
 
-            if (self.is_key_pressed(K_SPACE) or self.player[0].board.getSwitchBomb() if self.player[0].board is not None else False and not self.bomb[k].isPlant ) :
+            if (self.is_key_pressed(K_SPACE) or self.get_switch('bomb', 0) and not self.bomb[k].isPlant ) :
                 self.bomb[k].plant_bomb(self.player[0].get_x(), self.player[0].get_y())
 
             self.bomb[k].bomb_decay()
@@ -217,7 +229,7 @@ class MainGame(gamelib.SimpleGame):
 
             self.bomb2[k].check_blast_color(MainGame.blast_color_check)
 
-            if (self.is_key_pressed(K_RCTRL) or self.player[1].board.getSwitchBomb() if self.player[1].board is not None else False and not self.bomb2[k].isPlant ) :
+            if (self.is_key_pressed(K_RCTRL) or self.get_switch('bomb', 1) and not self.bomb2[k].isPlant ) :
                 self.bomb2[k].plant_bomb(self.player[1].get_x(), self.player[1].get_y())
 
             self.bomb2[k].bomb_decay()
