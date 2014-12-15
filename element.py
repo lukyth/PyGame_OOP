@@ -13,7 +13,7 @@ class Player(object):
     init_decay_time = 0.1
     init_died_delay = 20
     init_BG_delay = 15
-    def __init__(self, board, radius, color, pos):
+    def __init__(self, radius, color, pos):
         (self.x, self.y) = pos
         self.radius = radius
         self.color = color
@@ -25,7 +25,6 @@ class Player(object):
         self.player_picture = pygame.image.load("img/Player_white.png")
         self.this_player = Player.which_player
         Player.which_player += 1
-        self.board = board
 
     def player_delay(self):
         self.delay -= Player.init_decay_time
@@ -96,7 +95,7 @@ class Bomb(object):
     init_blastTime = 3
     init_decay_time = 0.1
     def __init__(self):
-
+        pygame.mixer.init()
         self.blast_range = 214
         self.blast_position = 94
 
@@ -121,23 +120,32 @@ class Bomb(object):
 
 
     def plant_bomb(self, x, y):
+        sound = pygame.mixer.Sound("sound/plant.wav")
+        sound.play()
         self.bomb_position = (x+15,y+15)
         self.isPlant = True
 
 
     def bomb_blast(self):
+        pygame.mixer.init()
+        sound = pygame.mixer.Sound("sound/bomb.wav")
+
         if(self.isBomb):
             self.blastTime -= Bomb.init_decay_time
+            sound.play()
         if(self.blastTime < 0):
             self.isBomb = False
             self.isPlant = False
             self.blastTime = Bomb.init_blastTime
     def check_player(self,player):
+        # pygame.mixer.init()
+        # sound = pygame.mixer.Sound("sound/splat.wav")
         player.died_delay -= Bomb.init_decay_time
         if self.isBomb and ((( self.bomb_position[0]-self.blast_position<= player.x+64 <= self.bomb_position[0]-self.blast_position + self.blast_range) and ( self.bomb_position[1]-16 <= player.y+64 <= self.bomb_position[1]-16 + self.blast_range) )
             or
             (( self.bomb_position[0]-16 <= player.x+64 <= self.bomb_position[0]-16 + self.blast_range ) and ( self.bomb_position[1]-self.blast_position <= player.y+64 <= self.bomb_position[1]-self.blast_position + self.blast_range))):
             if(player.died_delay <= 0):
+                # sound.play()
                 player.died_delay = player.init_died_delay
                 player.times_died += 1
                 print " Player",player.this_player," DIED", player.times_died," times"
@@ -174,8 +182,7 @@ class Wall(object):
         (self.init_x, self.init_y) = pos
         (self.x, self.y) = pos
         self.color = color
-        # self.random_time = Wall.init_wall_random_time
-        self.random_time = 1
+        self.random_time = Wall.init_wall_random_time
         if(color is 0):
             self.image = Wall.Wall_image
         elif(color is 1):
