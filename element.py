@@ -13,7 +13,7 @@ class Player(object):
     init_decay_time = 0.1
     init_died_delay = 20
     init_BG_delay = 15
-    def __init__(self, radius, color, pos):
+    def __init__(self, board, radius, color, pos):
         (self.x, self.y) = pos
         self.radius = radius
         self.color = color
@@ -25,6 +25,7 @@ class Player(object):
         self.player_picture = pygame.image.load("img/Player_white.png")
         self.this_player = Player.which_player
         Player.which_player += 1
+        self.board = board
 
     def player_delay(self):
         self.delay -= Player.init_decay_time
