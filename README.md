@@ -18,6 +18,8 @@ Files Description
 | board/practicum.py    | MCU Board basic function               |
 | board/peri.py         | MCU Board function to get input        |
 | board/test-usb.py     | board tester script                    |
+| board/libraries/      | necessary libraries for MCU Board      |
+| board/Makefile        | MCU Board Makefile                     |
 
 
 Require
